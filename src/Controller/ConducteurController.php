@@ -33,5 +33,18 @@ class ConducteurController extends AbstractController
        
         ]);
     }
+
+    #[Route('/conducteurcommentaire', name: 'commentaire_conducteur')]
+    public function Showcommentaire(ManagerRegistry $doctrine): Response
+    { 
+        $repo = $doctrine->getRepository(conducteur::class);
+     
+        $conducteur = $repo->findAll();
+
+        return $this->render('conducteur/commentaireconducteur.html.twig', [
+            'conducteur' => $conducteur,
+       
+        ]);
+    }
     
 }

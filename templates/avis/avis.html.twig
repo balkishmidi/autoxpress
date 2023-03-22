@@ -29,7 +29,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
 </head>
 
 <body>
@@ -135,6 +135,12 @@ margin-bottom   : -67px; ">
                 <button type="submit" class="btn btn-square btn-primary m-2"><i class="fa fa-trash"></i></button>
             </form>
         </td>
+         <td>
+     <form action="{{ path('app_avis_update', {'id': a.getId()}) }}"  onsubmit="return confirm('Are you sure you want to update this item?');">
+                <input type="hidden" name="_method" value="update" />
+                <button style="background:#ff9800;" type="submit" class="btn btn-square btn-primary m-2"><i class="fa fa-edit"></i></button>
+            </form>
+</td>
             </tr>
         {% endfor %}
     </tbody>

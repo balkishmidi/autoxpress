@@ -97,6 +97,7 @@ public function addavis(Request $request, ManagerRegistry $doctrine)
     // Save the Avis object to the database
     $entityManager->persist($avis);
     $entityManager->flush();
+    return $this->redirectToRoute('app_conducteur_avis');
 
     // Redirect the user back to the conducteur page
     return $this->render('conducteur/avisconducteur.html.twig', [
@@ -105,6 +106,39 @@ public function addavis(Request $request, ManagerRegistry $doctrine)
     ]);
 }
 
+
+
+#[Route('/updateavis/{id}', name: 'app_avis_update')]
+public function updateCommentaire(Request $request, ManagerRegistry $doctrine, int $id): Response
+{
+    $avis = $doctrine->getRepository(Avis::class)->find($id);
+
+    $form = $this->createFormBuilder($avis)
+        ->add('id_conducteur', TextType::class)
+        ->add('id_client', TextType::class)
+        ->add('rating', TextType::class)
+        ->add('save', SubmitType::class, ['label' => 'Update Avis'])
+        ->getForm();
+
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $doctrine->getManager()->flush();
+
+        // Render the table row with the updated comment data
+        return $this->redirectToRoute('app_avis');
+
+        return new Response($html);
+    }
+
+    // Render the update form HTML
+    $html = $this->renderView('avis/avisclient.html.twig', [
+        'form' => $form->createView(),
+        'avis' => $avis,
+    ]);
+
+    return new Response($html);
+}
 }
 
 
