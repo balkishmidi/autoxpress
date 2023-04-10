@@ -27,6 +27,11 @@ class Commentaire
     #[ORM\Column]
     private ?int $id_client = null;
 
+    #[ORM\Column]
+    private ?int $id_avis = null;
+
+ 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -77,6 +82,19 @@ class Commentaire
     public function setIdClient(int $id_client): self
     {
         $this->id_client = $id_client;
+
+        return $this;
+    }
+
+
+    public function getIdAvis(): ?int
+    {
+        return $this->id_avis;
+    }
+
+    public function setIdAvis(int $id_avis): self
+    {
+        $this->id_avis = $id_avis;
 
         return $this;
     }

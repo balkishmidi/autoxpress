@@ -85,7 +85,7 @@ margin-bottom   : -67px; ">        </a>
                             <h1 class="display-2 text-white text-uppercase mb-4 animated slideInDown">Get a ride in minutes</h1>
                             <h4 class="text-white text-uppercase mb-4 animated slideInDown"> <span class="fa fa-map-marker-alt text-primary"></span> Gazzela, Ariana, Ariana soghra</h4>
                             <h4 class="text-white text-uppercase mb-4 animated slideInDown"><span class="fa fa-phone-alt text-primary"></span>+216 70 445 400</h4>
-                        </div>
+                         </div>
                     </div>
                 </div>
                 <div class="carousel-item">
@@ -94,7 +94,7 @@ margin-bottom   : -67px; ">        </a>
                  </video>                           <div class="carousel-caption d-flex align-items-center justify-content-center text-start">
                         <div class="mx-sm-5 px-5" style="max-width: 900px;">
                             <h1 class="display-2 text-white text-uppercase mb-4 animated slideInDown">Get a ride in minutes</h1>
-                          <h4 class="text-white text-uppercase mb-4 animated slideInDown"> <span class="fa fa-map-marker-alt text-primary"></span> Gazzela, Ariana, Ariana soghra</h4>
+                           <h4 class="text-white text-uppercase mb-4 animated slideInDown"> <span class="fa fa-map-marker-alt text-primary"></span> Gazzela, Ariana, Ariana soghra</h4>
                             <h4 class="text-white text-uppercase mb-4 animated slideInDown"><span class="fa fa-phone-alt text-primary"></span>+216 70 445 400</h4>
                          </div>
                     </div>
@@ -207,54 +207,81 @@ margin-bottom   : -67px; ">        </a>
 </section>
 
 
-
-
-    <!-- Team Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-
-            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-                <p class="d-inline-block bg-secondary text-primary py-1 px-4">Our Drivers</p>
-                <h1 class="text-uppercase">Meet Our Drivers</h1>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="team-item">
-
-                       
-                      
- {% for a in conducteur %}
-
-
-
-                       
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="team-item">
-                        <div class="team-img position-relative overflow-hidden">
-    <img class="img-fluid"  src="{{ a.getImageConducteur() }}" alt="" style="height:400px" >
-                            <div class="team-social">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
+<section id="review">
+<div class="h-100 bg-secondary rounded p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h6 class="mb-0">Comments</h6>
+                                <a href="">Show All</a>
                             </div>
-                        </div>
-                         <div class="bg-secondary text-center p-4">
-                            <h5 class="text-uppercase">{{ a.getPrenomConducteur() }} {{ a.getNomConducteur() }}</h5>
-                            <span class="text-primary">Driver</span>
-                        </div>
 
-{% endfor %}
-                </div>
+                          {% for item in commentaireData %}
+    <div class="d-flex align-items-center border-bottom py-3">
+        <img class="rounded-circle flex-shrink-0" src="img/testimonial-1.jpg" alt="" style="width: 40px; height: 40px;">
+        <div class="w-100 ms-3">
+            <div class="d-flex w-100 justify-content-between">
+                <h6 class="mb-0">{{ item.client.getNomClient() }} {{ item.client.getPrenomClient() }}</h6>
+                <small>{{ item.commentaire.getDate()|date('Y-m-d') }}</small>
+            </div>
+            <span>{{ item.commentaire.getContenu() }}</span>
         </div>
     </div>
-    <!-- Team End -->
+{% endfor %}
 
 
+                              
+
+                        </div>
+</section>
 
 
+<section id="rating">
+  <div class="h-100 bg-secondary rounded p-4">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <h6 class="mb-0">Ratings</h6>
+      <a href="">Show All</a>
+      
+    </div>
+{% for conducteur in conducteurData %}
+  <div class="d-flex align-items-center border-bottom py-3">
+    <img class="rounded-circle flex-shrink-0" src="{{ conducteur.getImageConducteur() }}" alt="" style="width: 40px; height: 40px; ">
+    
+    <div class="w-100 ms-3">
+      <div class="d-flex w-100 justify-content-between">
+        <h6 class="mb-0">{{ conducteur.getNomConducteur() }} {{ conducteur.getPrenomConducteur() }}</h6>
+        {% set count = 0 %}
+        {% set totalRating = 0 %}
+        {% for avis in avisData %}
+          {% if avis.conducteur.getIdConducteur() == conducteur.getIdConducteur() %}
+            {% set totalRating = totalRating + avis.avis.getRating() %}
+            {% set count = count + 1 %}
+          {% endif %}
+        {% endfor %}
+        {% if count > 0 %}
+          {% set moyenne = totalRating / count %}
+          <small>{{ moyenne|number_format(1) }}</small>
+          <div class="star-rating">
+          {% for i in 1..5 %}
+    {% if i <= moyenne %}
+        <span class="fa fa-star checked"></span>
+    {% elseif i <= moyenne + 0.5 %}
+        <span class="fa fa-star-half checked"></span>
+    {% else %}
+        <span class="fa fa-star"></span>
+    {% endif %}
+{% endfor %}
+
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+
+  </div>
+</section>
+
+ 
 
     <section id="review">
     <!-- Testimonial Start -->
@@ -264,7 +291,7 @@ margin-bottom   : -67px; ">        </a>
                 <p class="d-inline-block bg-secondary text-primary py-1 px-4">Testimonial</p>
                 <h1 class="text-uppercase">What Our Clients Say!</h1>
             </div>
-       
+      
      <!-- Table Start -->
           <div class="container-fluid pt-4 px-4">
 
@@ -273,55 +300,51 @@ margin-bottom   : -67px; ">        </a>
         <button type="button" class="btn btn-primary rounded-pill m-2 add-comment-btn">+ Add</button>
 
         <div class="container-fluid pt-4 px-4" id="comment-form-container" hidden>
-         <h6 class="mb-0">Add comment</h6>
-                                                        <a href="">Show All</a>
             <div class="row g-4">
                 <div class="col-sm-12 col-md-6 col-xl-4">
                     <div class="d-flex align-items-center justify-content-between mb-2">
                         <h6 class="mb-0">Drivers</h6>
-                                                        <a href="">Show All</a>
-
                     </div>
- {% for a in conducteur %}
-    <form action="{{ path('add_comment') }}" method="POST" onsubmit="return checkComment({{ a.getIdConducteur() }});">
-        <div class="d-flex align-items-center border-bottom py-3" style="width:900px; ">
-            <img class="rounded-circle flex-shrink-0" src="{{ a.getImageConducteur() }}" alt="" style="width: 40px; height: 40px;">
-            <div class="w-100 ms-3">
-                <div class="d-flex w-100 justify-content-between">
-                    <h6 class="mb-0">{{ a.getPrenomConducteur() }} {{ a.getNomConducteur() }}</h6>
-                </div>
-                <div class="form-floating">
-                    <textarea class="form-control" placeholder="Leave a comment here" name="contenu" id="floatingTextarea{{ a.getIdConducteur() }}" style="height: 150px;border-radius: 15px ;background: #0d0d10; border-color: black;  margin-top: 7px;"></textarea>
-                    <label for="floatingTextarea{{ a.getIdConducteur() }}">Comments</label>
-                    <input type="hidden" name="id_client" value="13" />
-                    <input type="hidden" name="id_conducteur" value="{{ a.getIdConducteur() }}" />
-                    <button type="submit" class="btn btn-success rounded-pill m-2 evaluate-driver-btn" id="comment-done-btn-{{ a.getIdConducteur() }}">Send</button>
-                </div>
-            </div>
-        </div>
-    </form>
-{% endfor %}
+
+                    {% for a in conducteurData %}
+                        <form action="{{ path('add_comment') }}" method="POST">
+                            <div class="d-flex align-items-center border-bottom py-3" style="width:900px; ">
+    <img class="rounded-circle flex-shrink-0" src="{{ a.getImageConducteur() }}" alt="" style="width: 40px; height: 40px;    margin-top: -201px;">
+                                <div class="w-100 ms-3">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-0">{{ a.getPrenomConducteur() }} {{ a.getNomConducteur() }}</h6>
+                                    </div>
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Leave a comment here" name="contenu" id="floatingTextarea{{ a.getIdConducteur() }}" style="height: 150px;border-radius: 15px ;background: #0d0d10; border-color: black;  margin-top: 7px;"></textarea>
+                                        <label for="floatingTextarea{{ a.getIdConducteur() }}">Comments</label>
+                                        <input type="hidden" name="id_client" value="13" />
+                                        <input type="hidden" name="id_conducteur" value="{{ a.getIdConducteur() }}" />
+                                        <button type="submit" class="btn btn-success rounded-pill m-2 evaluate-driver-btn" id="comment-done-btn-{{ a.getIdConducteur() }}">Send</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    {% endfor %}
                 </div>
             </div>
  
 
             <!-- Table End -->
-    
+       
     <!-- Table Start -->
               <div class="container-fluid pt-4 px-4">
 
     <div class="bg-secondary rounded h-100 p-4">
-        <h6 class="mb-0">Add Review</h6>
-                                <a href="">Show All</a>
+        <h6 class="mb-4">Add Review</h6>
 
         <div class="container-fluid pt-4 px-4"  >
             <div class="row g-4">
                 <div class="col-sm-12 col-md-6 col-xl-4">
                     <div class="d-flex align-items-center justify-content-between mb-2">
                                 <h6 class="mb-0">Drivers</h6>
+                                
                             </div>
-                            
- {% for a in conducteur %}
+ {% for a in conducteurData %}
   <div class="d-flex align-items-center border-bottom py-3" style="width:900px;">
     <img class="rounded-circle flex-shrink-0" src="{{ a.getImageConducteur() }}" alt="" style="width: 40px; height: 40px;">
     <div class="w-100 ms-3">
@@ -357,7 +380,11 @@ margin-bottom   : -67px; ">        </a>
             <!-- Table End -->
         </div>
     </div>
-     </section>    
+     </section>  
+
+
+
+ 
 
     <!-- Testimonial End -->
 <section id="contact">
@@ -480,6 +507,30 @@ margin-bottom   : -67px; ">        </a>
     }
   }
 </script>
+ <script>
+  const conducteurs = document.querySelectorAll(".driver-rating");
+
+  for (let i = 0; i < conducteurs.length; i++) {
+    const stars = conducteurs[i].querySelectorAll(".fa-star");
+
+    for (let j = 0; j < stars.length; j++) {
+      stars[j].addEventListener("click", function() {
+        const ratingInput = conducteurs[i].parentNode.querySelector(".driver-rating-value");
+        const index = parseInt(this.getAttribute("data-rating"));
+        
+        for (let k = 0; k < stars.length; k++) {
+          if (k < index) {
+            stars[k].classList.add("rated");
+          } else {
+            stars[k].classList.remove("rated");
+          }
+        }
+        
+        ratingInput.value = index;
+      });
+    }
+  }
+</script>
 <style>
   .fa-star {
     color: #ccc;
@@ -492,6 +543,21 @@ margin-bottom   : -67px; ">        </a>
   .fa-star.hovered {
     color: yellow;
   }
+.star-rating {
+  display: inline-block;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.fa-star {
+  color: #ccc;
+}
+
+.checked {
+  color: #f7d32b;
+}
+
+
   #avis-form-container {
   display: block;
 }
@@ -513,16 +579,7 @@ addCommentBtn.addEventListener('click', () => {
 });
 </script>
 
-<script>
-function checkComment(id_conducteur) {
-    var contenu = document.getElementById("floatingTextarea" + id_conducteur).value;
-    if (contenu.trim() === '') {
-        alert("Please enter a comment.");
-        return false;
-    }
-    return true;
-}
-</script>
+
 
     <!-- Template Javascript -->
     <script>(function ($) {

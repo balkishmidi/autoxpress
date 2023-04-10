@@ -28,8 +28,8 @@ class CommentaireController extends AbstractController
      
         $commentaire = $repo->findAll();
 
-        return $this->render('conducteur/avisconducteur.html.twig', [
-            'commentaires' => $commentaire,
+        return $this->render('commentaire/commentaire.html.twig', [
+            'commentaire' => $commentaire,
        
         ]);
     }
@@ -142,6 +142,8 @@ public function addavis(Request $request, ManagerRegistry $doctrine)
     $id_client = $request->request->get('id_client');
     $id_conducteur = $request->request->get('id_conducteur');
     $rating = $request->request->get('rating');
+    $id = $request->request->get('id_avis');
+
     
     // Find the conducteur object
     $conducteur = $repo->find($id_conducteur);
@@ -152,9 +154,12 @@ public function addavis(Request $request, ManagerRegistry $doctrine)
     $avis->setIdConducteur($id_conducteur);
     $avis->setRating($rating);
 
+
+
     // Save the Avis object to the database
     $entityManager->persist($avis);
     $entityManager->flush();
+    return $this->redirectToRoute('app_conducteur_avis');
 
     // Redirect the user back to the conducteur page
     return $this->render('conducteur/avisconducteur.html.twig', [
@@ -174,7 +179,14 @@ public function addcomment(Request $request, ManagerRegistry $doctrine)
     $id_client = $request->request->get('id_client');
     $id_conducteur = $request->request->get('id_conducteur');
     $contenu = $request->request->get('contenu');
-    
+    $id_avis = $request->request->get('id_avis');
+   // Check if the 'contenu' field is empty
+   if(empty($contenu)){
+    // Show an alert message
+    $this->addFlash('error', 'Le contenu est vide!');
+    return $this->redirectToRoute('app_conducteur_avis');
+}
+
     // Find the conducteur object
     $conducteur = $repo->find($id_conducteur);
 
@@ -184,6 +196,7 @@ public function addcomment(Request $request, ManagerRegistry $doctrine)
     $comment->setIdConducteur($id_conducteur);
     $comment->setContenu($contenu);
     $comment->setDate(new DateTime());
+    $comment->setIdAvis(13);
 
 
     // Save the Avis object to the database

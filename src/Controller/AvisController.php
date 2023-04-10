@@ -19,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
+
 class AvisController extends AbstractController
 {
 
@@ -75,36 +76,47 @@ class AvisController extends AbstractController
         ]);
     }
     #[Route('/addavis', name: 'add_avis')]
-public function addavis(Request $request, ManagerRegistry $doctrine)
-{    
-    $entityManager = $this->getDoctrine()->getManager();
-    $repo = $doctrine->getRepository(conducteur::class);
+    public function addavis(Request $request, ManagerRegistry $doctrine)
+    {    
+        $entityManager = $this->getDoctrine()->getManager();
+        $repo = $doctrine->getRepository(conducteur::class);
+        
+        // Get the values from the form
+        $id_client = $request->request->get('id_client');
+        $id_conducteur = $request->request->get('id_conducteur');
+        $rating = $request->request->get('rating');
     
-    // Get the values from the form
-    $id_client = $request->request->get('id_client');
-    $id_conducteur = $request->request->get('id_conducteur');
-    $rating = $request->request->get('rating');
+        // Check if the input values are empty
+        if($rating == 0) {
+            // Display an alert message
+            echo "<script>alert('Please fill in all fields');</script>";
+            // Redirect the user back to the conducteur page
+            return $this->render('conducteur/avisconducteur.html.twig', [
+                'conducteur' => $conducteur,
+            ]);
+        }
     
-    // Find the conducteur object
-    $conducteur = $repo->find($id_conducteur);
-
-    // Create a new Avis object and set its properties
-    $avis = new Avis();
-    $avis->setIdClient('13');
-    $avis->setIdConducteur($id_conducteur);
-    $avis->setRating($rating);
-
-    // Save the Avis object to the database
-    $entityManager->persist($avis);
-    $entityManager->flush();
-    return $this->redirectToRoute('app_conducteur_avis');
-
-    // Redirect the user back to the conducteur page
-    return $this->render('conducteur/avisconducteur.html.twig', [
-        'conducteur' => $conducteur,
-   
-    ]);
-}
+        // Find the conducteur object
+        $conducteur = $repo->find($id_conducteur);
+    
+        // Create a new Avis object and set its properties
+        $avis = new Avis();
+        $avis->setIdClient('13');
+        $avis->setIdConducteur($id_conducteur);
+        $avis->setRating($rating);
+    
+        // Save the Avis object to the database
+        $entityManager->persist($avis);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_conducteur_avis');
+    
+        // Redirect the user back to the conducteur page
+        return $this->render('conducteur/avisconducteur.html.twig', [
+            'conducteur' => $conducteur,
+       
+        ]);
+    }
+    
 
 
 
