@@ -1,4 +1,4 @@
-<html lang="en">
+
 
 <head>
     <meta charset="utf-8">
@@ -33,44 +33,44 @@
 
 <body>
 
+   
 
 
+
+
+
+   
+<form method="post">
+ 
 
 <div class="video-container">
  <video class="w-100" autoplay loop muted>
   <source src="img/autoxpress.mp4" type="video/mp4">
 
 </video> 
-
-  <div class="form-container">
- <img class="logo" src="{{ asset('img/logo.png') }}" alt="Logo" style="width: 150px;margin-top: -50px;    
-margin-bottom   : -67px; "> 
-<h2>Login</h2>
-
-<form action="{{ path('conducteur_login') }}" method="POST">
+ {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+    <div class="form-floating mb-3">
+        {{ form_row(form.email_conducteur) }}
+        <label for="inputEmail">Email</label>
+    </div>
+    <div class="form-floating mb-4">
+        {{ form_row(form.password) }}
+        <label for="inputPassword">Password</label>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="form-check">
+            {{ form_row(form.remember_me) }}
+            <label class="form-check-label" for="exampleCheck1">Remember me</label>
+        </div>
+        <a href="">Forgot Password</a>
+    </div>
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign In</button>
+    <p class="text-center mb-0">Don't have an Account? <a href="{{path('app_register')}}">Sign Up</a></p>
 
-    <div class="mb-3">
-        <label for="email" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="email" name="_email" aria-describedby="emailHelp" required>
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-    </div>
-
-    <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="_password" required>
-    </div>
-
-    <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Sign in</button>
 </form>
-
-  </div>
-</div>
 
 
 

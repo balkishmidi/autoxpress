@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Commentaire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
  * @extends ServiceEntityRepository<Commentaire>
@@ -46,7 +47,9 @@ public function searchById($id)
 }
 
 
-
+public function addFlash($type, $message) {
+    $this->get('session')->getFlashBag()->add($type, $message);
+}
 //    /**
 //     * @return Commentaire[] Returns an array of Commentaire objects
 //     */

@@ -67,38 +67,7 @@ class CommentaireController extends AbstractController
     }
 
 
-    #[Route('/updatecommentaire/{id}', name: 'app_commentaire_update')]
-    public function updateCommentaire(Request $request, ManagerRegistry $doctrine, int $id): Response
-    {
-        $commentaire = $doctrine->getRepository(Commentaire::class)->find($id);
-    
-        $form = $this->createFormBuilder($commentaire)
-            ->add('id_conducteur', TextType::class)
-            ->add('id_client', TextType::class)
-            ->add('contenu', TextType::class)
-            ->add('save', SubmitType::class, ['label' => 'Update commentaire'])
-            ->getForm();
-    
-        $form->handleRequest($request);
-    
-        if ($form->isSubmitted() && $form->isValid()) {
-            $doctrine->getManager()->flush();
-    
-            // Render the table row with the updated comment data
-            return $this->redirectToRoute('app_commentaire');
-    
-            return new Response($html);
-        }
-    
-        // Render the update form HTML
-        $html = $this->renderView('commentaire/commentaireclient.html.twig', [
-            'form' => $form->createView(),
-            'commentaire' => $commentaire,
-        ]);
-    
-        return new Response($html);
-    }
-    
+   
 
 
 
@@ -119,19 +88,7 @@ class CommentaireController extends AbstractController
         return $this->redirectToRoute('app_avis');
     }
 
-    #[Route('/conducteur', name: 'app_conducteur_avis')]
-    public function ShowConducteur(ManagerRegistry $doctrine): Response
-    { 
-        $repo = $doctrine->getRepository(conducteur::class);
-        $repos = $doctrine->getRepository(commentaire::class);
 
-        $conducteur = $repo->findAll();
-
-        return $this->render('conducteur/avisconducteur.html.twig', [
-            'conducteur' => $conducteur,
-       
-        ]);
-    }
     #[Route('/addavis', name: 'add_avis')]
 public function addavis(Request $request, ManagerRegistry $doctrine)
 {    
@@ -159,7 +116,7 @@ public function addavis(Request $request, ManagerRegistry $doctrine)
     // Save the Avis object to the database
     $entityManager->persist($avis);
     $entityManager->flush();
-    return $this->redirectToRoute('app_conducteur_avis');
+    return $this->redirectToRoute('app_client');
 
     // Redirect the user back to the conducteur page
     return $this->render('conducteur/avisconducteur.html.twig', [
@@ -180,11 +137,15 @@ public function addcomment(Request $request, ManagerRegistry $doctrine)
     $id_conducteur = $request->request->get('id_conducteur');
     $contenu = $request->request->get('contenu');
     $id_avis = $request->request->get('id_avis');
-   // Check if the 'contenu' field is empty
-   if(empty($contenu)){
+ // Get the value from the "contenu" field
+$contenu = trim($request->request->get('contenu'));
+
+// Check if the "contenu" field is empty
+if ($contenu == "") {
+  
     // Show an alert message
     $this->addFlash('error', 'Le contenu est vide!');
-    return $this->redirectToRoute('app_conducteur_avis');
+    return $this->redirectToRoute('app_conducteur');
 }
 
     // Find the conducteur object
@@ -206,7 +167,7 @@ public function addcomment(Request $request, ManagerRegistry $doctrine)
    // Get all comments for the conducteur
    $commentaireRepository = $entityManager->getRepository(Commentaire::class);
    $commentaire = $commentaireRepository->findBy(['id_conducteur' => $id_conducteur]);
-   return $this->redirectToRoute('app_conducteur_avis');
+   return $this->redirectToRoute('app_conducteur');
    // Redirect the user back to the conducteur page
    return $this->render('conducteur/avisconducteur.html.twig', [
        'conducteur' => $conducteur,

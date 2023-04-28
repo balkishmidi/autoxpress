@@ -12,7 +12,8 @@ use App\Entity\Avis;
 use App\Entity\Commentaire;
 use App\Entity\Conducteur;
 use App\Repository\ConducteurRepository;
-
+use App\Entity\Client;
+use App\Repository\ClientRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -63,18 +64,9 @@ class AvisController extends AbstractController
         return $this->redirectToRoute('app_avis');
     }
 
-    #[Route('/conducteur', name: 'app_conducteur_avis')]
-    public function ShowConducteur(ManagerRegistry $doctrine): Response
-    { 
-        $repo = $doctrine->getRepository(conducteur::class);
-     
-        $conducteur = $repo->findAll();
+   
 
-        return $this->render('conducteur/avisconducteur.html.twig', [
-            'conducteur' => $conducteur,
-       
-        ]);
-    }
+
     #[Route('/addavis', name: 'add_avis')]
     public function addavis(Request $request, ManagerRegistry $doctrine)
     {    
@@ -120,37 +112,54 @@ class AvisController extends AbstractController
 
 
 
-#[Route('/updateavis/{id}', name: 'app_avis_update')]
-public function updateCommentaire(Request $request, ManagerRegistry $doctrine, int $id): Response
+
+
+
+#[Route('/detailsavis/{id}', name: 'details_avis')]
+public function detailsavis(ManagerRegistry $doctrine,int $id): Response
 {
-    $avis = $doctrine->getRepository(Avis::class)->find($id);
+    $rep = $doctrine->getRepository(Client::class);
+    $repo = $doctrine->getRepository(Conducteur::class);
+    $repos = $doctrine->getRepository(Commentaire::class);
+    $avisRepo = $doctrine->getRepository(Avis::class);
 
-    $form = $this->createFormBuilder($avis)
-        ->add('id_conducteur', TextType::class)
-        ->add('id_client', TextType::class)
-        ->add('rating', TextType::class)
-        ->add('save', SubmitType::class, ['label' => 'Update Avis'])
-        ->getForm();
+    $clients = $rep->findAll();
+    $conducteurs = $repo->findAll();
+    $commentaires = $repos->findAll();
+    $avis = $avisRepo->findAll();
 
-    $form->handleRequest($request);
+    $commentaireData = [];
+    $avisData = [];
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $doctrine->getManager()->flush();
+   
 
-        // Render the table row with the updated comment data
-        return $this->redirectToRoute('app_avis');
-
-        return new Response($html);
+    foreach ($avis as $avi) {
+        if ($avi->getIdConducteur() == $id) { // <-- Add this line
+            $client = $rep->find($avi->getIdClient());
+            $conducteur = $repo->find($avi->getIdConducteur());
+            $avisData[] = [
+                'client' => $client,
+                'conducteur' => $conducteur,
+                'avis' => $avi,
+            ];
+        } // <-- Add this line
     }
 
-    // Render the update form HTML
-    $html = $this->renderView('avis/avisclient.html.twig', [
-        'form' => $form->createView(),
-        'avis' => $avis,
-    ]);
 
-    return new Response($html);
+    return $this->render('conducteur/detailsavis.html.twig', [
+        'conducteurData' => $conducteurs,
+        'client' => $clients,
+        'avisData' => $avisData,
+        'id' => $id,
+    ]);
 }
+
+
+
+
+
+
 }
+
 
 

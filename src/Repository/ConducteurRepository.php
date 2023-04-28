@@ -39,6 +39,17 @@ class ConducteurRepository extends ServiceEntityRepository
         }
     }
 
+
+    
+    public function findByEmail($email)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.email_conducteur = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    
 //    /**
 //     * @return Conducteur[] Returns an array of Conducteur objects
 //     */
